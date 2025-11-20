@@ -1,0 +1,127 @@
+{
+    "api": {
+        "services": [
+            "HandlerService",
+            "LoggerService",
+            "StatsService",
+            "RoutingService"
+        ],
+        "tag": "api"
+    },
+    "inbounds": [
+        {
+            "listen": "127.0.0.1",
+            "port": 8v2ray-id,
+            "protocol": "dokodemo-door",
+            "settings": {
+                "address": "127.0.0.1"
+            },
+            "tag": "api"
+        }
+    ],
+    "log": {
+        "//access": "/root/log/v2ray.access.log",
+        "//error": "/root/log/v2ray.error.log",
+        "loglevel": "info"
+    },
+    "outbounds": [
+        {
+            "protocol": "freedom",
+            "settings": {
+                "domainStrategy": "UseIP"
+            }
+        }, {
+            "protocol": "blackhole",
+            "settings": {
+                "response": {
+                    "type": "http"
+                }
+            },
+            "tag": "blocked"
+        }, {
+            "protocol": "blackhole",
+            "settings": {},
+            "tag": "block"
+        }
+    ],
+    "policy": {
+        "levels": {
+            "0": {
+                "connIdle": 300,
+                "downlinkOnly": 5,
+                "handshake": 4,
+                "statsUserDownlink": true,
+                "statsUserUplink": true,
+                "uplinkOnly": 2
+            }
+        },
+        "system": {
+            "statsInboundDownlink": false,
+            "statsInboundUplink": false
+        }
+    },
+    "reverse": {},
+    "routing": {
+        "rules": [
+            {
+                "inboundTag": [
+                    "api"
+                ],
+                "outboundTag": "api",
+                "type": "field"
+            }, {
+                "protocol": [
+                    "bittorrent"
+                ],
+                "outboundTag": "block",
+                "type": "field"
+            }, {
+                "user": [
+                    "1:1:100@a.com"
+                ],
+                "outboundTag": "block",
+                "type": "field"
+            }, {
+                "source": [
+                    "59.27.28.18"
+                ],
+                "outboundTag": "block",
+                "type": "field"
+            }
+        ],
+        "domainStrategy": "AsIs"
+    },
+    "stats": {
+        "routing": {
+            "enabled": true
+        }
+    },
+    "sspanel": {
+        "nodeid": v2ray-id,
+        "checkRate": 60,
+        "SpeedTestCheckRate": 0,
+        "panelUrl": "99864fa7083898e0e35ce79201ba5603f13bbafcc97c4454360446d33f2b7e2c",
+        "panelKey": "c68eeb6398d7bcc3d35da66eb3aff739",
+        "downWithPanel": 1,
+        "mu_regex":  "%5m%id.%suffix",
+        "mu_suffix": "microsoft.com",
+        "mysql": {
+            "host": "77a1f274f730e6c2ddf9ca4f9de7a92b",
+            "port": 3306,
+            "user": "1ce4d2e14f60756e662b3c09b9d53645",
+            "password": "c68eeb6398d7bcc3d35da66eb3aff739",
+            "dbname": "1ce4d2e14f60756e662b3c09b9d53645"
+        },
+        "paneltype": 0,
+        "usemysql": 1,
+        "go_panel_host": "bing.com",
+        "go_panel_key": "passwd",
+        "cf_key": "0017fe4fd9e9e4b795b5bea8dda6d75059ed487dfc33043d21a649ed8bfee84c39e692ad6027c776613281a1914392b9",
+        "cf_email": "fbc02ccda8871cec2620ae1db5677c30c9383481c65865d69e299d9c8e10a938",
+        "alive_ip": 1,
+        "node_info": 0,
+        "node_online_log": 1,
+        "user_traffic_log": 0,
+        "proxy_tcp": 0
+    }
+}
