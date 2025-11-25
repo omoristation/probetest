@@ -1,4 +1,15 @@
 {
+    "dns": {
+        "servers": [
+            {
+                "address": "8.8.8.8",
+                "domains": [
+                    "gemini.google.com"
+                ]
+            }
+        ],
+        "queryStrategy": "UseIPv4"
+    },
     "api": {
         "services": [
             "HandlerService",
