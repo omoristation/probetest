@@ -119,7 +119,7 @@
         "mu_suffix": "microsoft.com",
         "mysql": {
             "host": "77a1f274f730e6c2ddf9ca4f9de7a92b",
-            "port": 3306,
+            "port": 6033,
             "user": "1ce4d2e14f60756e662b3c09b9d53645",
             "password": "c68eeb6398d7bcc3d35da66eb3aff739",
             "dbname": "1ce4d2e14f60756e662b3c09b9d53645"
