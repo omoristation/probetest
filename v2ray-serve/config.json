@@ -114,7 +114,7 @@
         "SpeedTestCheckRate": 0,
         "panelUrl": "99864fa7083898e0e35ce79201ba5603f13bbafcc97c4454360446d33f2b7e2c",
         "panelKey": "c68eeb6398d7bcc3d35da66eb3aff739",
-        "downWithPanel": 1,
+        "downWithPanel": 0,
         "mu_regex":  "%5m%id.%suffix",
         "mu_suffix": "microsoft.com",
         "mysql": {
@@ -125,7 +125,7 @@
             "dbname": "1ce4d2e14f60756e662b3c09b9d53645"
         },
         "paneltype": 0,
-        "usemysql": 1,
+        "usemysql": 0,
         "go_panel_host": "bing.com",
         "go_panel_key": "passwd",
         "cf_key": "0017fe4fd9e9e4b795b5bea8dda6d75059ed487dfc33043d21a649ed8bfee84c39e692ad6027c776613281a1914392b9",
