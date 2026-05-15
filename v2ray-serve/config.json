@@ -56,6 +56,18 @@
             "tag": "block"
         }
     ],
+    "burstObservatory": {
+        "subjectSelector": [
+            "proxy"
+        ],
+        "pingConfig": {
+            "destination": "http://www.google.com/gen_204",
+            "interval": "60s",
+            "connectivity": "",
+            "timeout": "10s",
+            "sampling": 2
+        }
+    },
     "policy": {
         "levels": {
             "0": {
@@ -99,6 +111,16 @@
                 ],
                 "outboundTag": "block",
                 "type": "field"
+            }
+        ],
+        "balancers": [
+            {
+                "tag": "balancer",
+                "selector": [
+                    "proxy"
+                ],
+                "fallbackTag": "direct",
+                "strategy": {}
             }
         ],
         "domainStrategy": "AsIs"
