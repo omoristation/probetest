@@ -72,11 +72,12 @@
         "levels": {
             "0": {
                 "connIdle": 300,
-                "downlinkOnly": 5,
                 "handshake": 4,
                 "statsUserDownlink": true,
                 "statsUserUplink": true,
-                "uplinkOnly": 2
+                "statsUserOnline": true,
+                "uplinkOnly": 2,
+                "downlinkOnly": 5
             }
         },
         "system": {
@@ -84,7 +85,6 @@
             "statsInboundUplink": false
         }
     },
-    "reverse": {},
     "routing": {
         "rules": [
             {
