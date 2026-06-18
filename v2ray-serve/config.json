@@ -4,13 +4,7 @@
             "1.1.1.1",
             "8.8.8.8",
             "2606:4700:4700::1111",
-            "2001:4860:4860::8888",
-            {
-                "address": "8.8.8.8",
-                "domains": [
-                    "gemini.google.com"
-                ]
-            }
+            "2001:4860:4860::8888"
         ],
         "queryStrategy": "UseIP"
     },
@@ -43,7 +37,7 @@
         {
             "protocol": "freedom",
             "settings": {
-                "domainStrategy": "UseIP"
+                "domainStrategy": "UseIPv4v6"
             },
             "tag": "direct"
         }, {
