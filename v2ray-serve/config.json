@@ -154,6 +154,8 @@
         "node_info": 0,
         "node_online_log": 1,
         "user_traffic_log": 0,
-        "proxy_tcp": 0
+        "proxy_tcp": 0,
+        "connLimit": 50,
+        "connIdle": 2
     }
 }
