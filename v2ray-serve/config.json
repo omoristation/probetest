@@ -156,6 +156,9 @@
         "user_traffic_log": 0,
         "proxy_tcp": 0,
         "connLimit": 50,
-        "connIdle": 2
+        "connIdle": 2,
+        "connPenalty": 0.2,
+        "connPenaltyChecks": 2,
+        "connPenaltyInterval": 60
     }
 }
