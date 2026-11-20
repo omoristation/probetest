@@ -80,25 +80,41 @@ DaemonMonitor () {
 #监控用户登录
 UserMonitor () {
     if [ ! -f "$monitorConf" ] || [ "$(Monitorconf Usersend)" == 1 ]; then
-        LoginUser=`who | grep pts | wc -l`
-        #sshname=$(who | awk '{print $5}' | sed 's/[()]//g') # 获取ssh登录者IP
-        sshname=$(who | grep pts | sed 's/^.*(\(.*\)).*/\1/') # 获取ssh登录者IP 替换括号之前和之后的内容为空 例如 root pts/0 2024-04-24 21:02 (133.130.167.16)
-        if [ -z "$sshname" ]; then
-            sshname=$(echo $SSH_CONNECTION | awk '{print $1}') # 获取ssh登录者IP 需要.profile文件调用本脚本
+        # 取所有 pts 会话的来源 IP，去重（兼容 Debian 13 每次登录出现 sshd / sshd pts/N 两条记录）
+        # 只匹配 pts/ 行，括号内的内容即为来源，例如 root sshd pts/0 Nov 20 14:48 (106.133.25.87)
+        sshlist=$(who | grep 'pts/' | sed -n 's/^.*(\(.*\)).*$/\1/p' | sort -u)
+        # 兜底：who 里取不到时，使用 SSH_CONNECTION（需要 .profile 调用本脚本）
+        if [ -z "$sshlist" ] && [ -n "$SSH_CONNECTION" ]; then
+            sshlist=$(echo "$SSH_CONNECTION" | awk '{print $1}')
         fi
-        if [ $LoginUser -ge 2 ]; then
+        # 去掉本地回环和空行
+        sshlist=$(echo "$sshlist" | grep -v -e '^127\.0\.0\.1$' -e '^::1$' -e '^$')
+        # 不同来源 IP 的数量（同一 IP 开多个终端只算 1 个）
+        LoginUser=$(echo "$sshlist" | grep -c .)
+        # 总会话数（仅供参考）
+        SessionNum=$(who | grep -c 'pts/')
+        if [ "$LoginUser" -ge 2 ]; then
             WarningT="登录报警[$ip]"
-            Warning="登录报警[$ip],系统登录多用户为[$LoginUser]人,请确认。"
+            Warning="登录报警[$ip],系统存在多个来源登录[$(echo $sshlist | tr '\n' ' ')],共[$SessionNum]个会话,请确认。"
             status=0
-        elif [ -n "$sshname" ] && [ "$sshname" != "127.0.0.1" ]; then # 如果ssh登录
-            dynamicip=$(echo "$(wget --no-cache --timeout=10 --no-check-certificate -q -O - https://vpng.net/?ip=1.dynamic.owlvpn.net)" | awk '{print $1}') # 使用 awk 提取第一个空格之前的部分 例"1.33.242.181 jp 日本" 禁用wget缓存
-            sship=$(echo "$(wget --no-cache --timeout=10 --no-check-certificate -q -O - https://vpng.net/?ip=$sshname)" | awk '{print $1}') #考虑反向dns有域名的情况，先解析一下
-            if [ "$sship" != "$dynamicip" ]; then
-                wgetip=$(echo "$(wget --no-cache --timeout=10 --no-check-certificate -q -O - https://vpng.net/?ip=$sshname)")
-                WarningT="登录报警[$ip]"
-                Warning="登录报警[$ip],系统登录非法用户为[$wgetip],请确认。"
-                status=0
-            fi
+        elif [ "$LoginUser" -eq 1 ]; then
+            # 只查询一次动态域名 IP
+            dynamicip=$(wget --no-cache --timeout=10 --no-check-certificate -q -O - \
+                "https://vpng.net/?ip=1.dynamic.owlvpn.net" | awk '{print $1}')
+            status=2
+            for sshname in $sshlist; do
+                # 考虑反向 dns 有域名的情况，先解析一下
+                wgetip=$(wget --no-cache --timeout=10 --no-check-certificate -q -O - \
+                    "https://vpng.net/?ip=$sshname")
+                sship=$(echo "$wgetip" | awk '{print $1}')
+                if [ "$sship" != "$dynamicip" ]; then
+                    WarningT="登录报警[$ip]"
+                    Warning="登录报警[$ip],系统登录非法用户为[$wgetip],请确认。"
+                    status=0
+                    break
+                fi
+            done
+            [ "$status" -eq 2 ] && echo "UserMonitor OK"
         else
             echo "UserMonitor OK"
             status=2
